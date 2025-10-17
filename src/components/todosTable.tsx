@@ -9,6 +9,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Todo, TodoUrgency } from "@/types/Todo";
+import { fetchWrapper } from "@/utils/fetchWrapper";
+import { Pencil, Trash2 } from "lucide-react";
+import { getCookie } from "cookies-next/client";
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 interface TodosTableProps {
   todos: Todo[];
@@ -38,12 +43,40 @@ function formatDate(date: Date | null | undefined): string {
 }
 
 export function TodosTable({ todos }: TodosTableProps) {
+  const { toast } = useToast();
+  const router = useRouter();
+
   if (todos.length === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-gray-500">Nenhum todo encontrado.</p>
       </div>
     );
+  }
+
+  async function onDelete(id: string) {
+    try {
+      const token = getCookie("LEGGAL::TOKEN");
+
+      await fetchWrapper(`todos/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      toast({
+        title: "Sucesso!",
+        description: "Todo deletado com sucesso.",
+        variant: "sucess",
+      });
+
+      router.refresh();
+    } catch (error) {
+      toast({
+        title: "Erro!",
+        description: error instanceof Error ? error.message : "Erro ao deletar todo.",
+        variant: "destructive",
+      });
+    }
   }
 
   return (
@@ -55,6 +88,7 @@ export function TodosTable({ todos }: TodosTableProps) {
           <TableHead>Urgência</TableHead>
           <TableHead>Criado em</TableHead>
           <TableHead>Atualizado em</TableHead>
+          <TableHead className="text-center">Ações</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -75,6 +109,25 @@ export function TodosTable({ todos }: TodosTableProps) {
             </TableCell>
             <TableCell>{formatDate(todo.createdAt)}</TableCell>
             <TableCell>{formatDate(todo.updatedAt)}</TableCell>
+            <TableCell>
+              <div className="flex items-center justify-center gap-2">
+                <button
+                  onClick={() => {}}
+                  className="text-blue-600 hover:text-blue-800 transition-colors"
+                  title="Editar"
+                >
+                  <Pencil size={18} />
+                </button>
+
+                <button
+                  onClick={() => onDelete(todo.id)}
+                  className="text-red-600 hover:text-red-800 transition-colors"
+                  title="Deletar"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
