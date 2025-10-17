@@ -1,12 +1,13 @@
 import { Pagination } from "@/components/pagination";
-
+import { TodosTable } from "@/components/todosTable";
+import { Button } from "@/components/ui/button";
 import { Todo } from "@/types/Todo";
-
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { getToken } from "@/utils/getToken";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
-
-interface IReponseClients {
+interface IResponseTodos {
   list: Todo[];
   paging: {
     total: number;
@@ -15,18 +16,10 @@ interface IReponseClients {
   };
 }
 
-export type ParsedClient = {
-  id: string;
-  name: string;
-  companyValue: string;
-  salary: string;
-  isSelect: boolean;
-  userId: string;
-};
 async function requestTodos(pageSize: number, page: number) {
   const token = await getToken();
 
-  const data: IReponseClients = await fetchWrapper(
+  const data: IResponseTodos = await fetchWrapper(
     `todos?pageSize=${pageSize}&page=${page}`,
     {
       method: "GET",
@@ -40,7 +33,7 @@ async function requestTodos(pageSize: number, page: number) {
   };
 }
 
-export default async function Clients(props: {
+export default async function TodosPage(props: {
   searchParams?: Promise<{
     page?: string;
   }>;
@@ -49,19 +42,32 @@ export default async function Clients(props: {
   const ITEMS_PER_PAGE: number = 10;
   const page = Number(searchParams?.page) || 1;
   const response = await requestTodos(ITEMS_PER_PAGE, page);
-  const totalCountClients = response.paging.total;
-
+  const totalCount = response.paging.total;
 
   return (
     <main className="p-4">
-      <p className="text-black mb-[10px]">
-        <span className="text-black font-semibold mr-[5px]">
-          {totalCountClients}
-        </span>
-        Todos encontrados:
-      </p>
-      {response.paging.total >= 1 && (
-        <Pagination totalCount={totalCountClients || 10} />
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-2xl font-bold text-black">Todos</h1>
+          <Link href="/todos/create">
+            <Button className="flex items-center gap-2 h-9 px-4 text-sm">
+              <Plus className="h-4 w-4" />
+              Criar Todo
+            </Button>
+          </Link>
+        </div>
+        <p className="text-black">
+          <span className="text-black font-semibold mr-[5px]">
+            {totalCount}
+          </span>
+          {totalCount === 1 ? "Todo encontrado" : "Todos encontrados"}
+        </p>
+      </div>
+
+      <TodosTable todos={response.todos} />
+
+      {response.paging.total > ITEMS_PER_PAGE && (
+        <Pagination totalCount={totalCount} />
       )}
     </main>
   );
