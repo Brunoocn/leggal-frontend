@@ -9,24 +9,29 @@ export function TodosSearchWrapper() {
   const searchParams = useSearchParams();
   const lastQueryRef = useRef<string>(searchParams.get("query") || "");
 
-  const handleSearch = useCallback((query: string) => {
-    // Evita requisições duplicadas
-    if (query === lastQueryRef.current) {
-      return;
-    }
+  const handleSearch = useCallback(
+    (query: string) => {
+      if (query === lastQueryRef.current) {
+        return;
+      }
 
-    lastQueryRef.current = query;
-    const params = new URLSearchParams(searchParams.toString());
+      lastQueryRef.current = query;
+      const params = new URLSearchParams();
 
-    if (query) {
-      params.set("query", query);
-      params.delete("page"); // Remove paginação quando está em modo de busca
-    } else {
-      params.delete("query");
-    }
+      if (query) {
+        params.set("query", query);
+      } else {
+        const currentPage = searchParams.get("page");
+        if (currentPage) {
+          params.set("page", currentPage);
+        }
+      }
 
-    router.push(`/todos?${params.toString()}`);
-  }, [router, searchParams]);
+      const queryString = params.toString();
+      router.push(queryString ? `/todos?${queryString}` : "/todos");
+    },
+    [router, searchParams]
+  );
 
   return <TodosSearch onSearch={handleSearch} />;
 }

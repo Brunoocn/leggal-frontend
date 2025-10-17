@@ -59,18 +59,18 @@ export default async function TodosPage(props: {
   const page = Number(searchParams?.page) || 1;
   const query = searchParams?.query;
 
+  const isSearchMode = !!query;
+
   let todos: Todo[];
   let totalCount: number;
-  let isSearchMode = false;
 
-  const response = await requestTodos(ITEMS_PER_PAGE, page);
-  todos = response.todos;
-  totalCount = response.paging.total;
-
-  if (query) {
+  if (isSearchMode) {
     todos = await searchTodos(query);
     totalCount = todos.length;
-    isSearchMode = true;
+  } else {
+    const response = await requestTodos(ITEMS_PER_PAGE, page);
+    todos = response.todos;
+    totalCount = response.paging.total;
   }
 
   return (
