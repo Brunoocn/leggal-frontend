@@ -91,7 +91,7 @@ export default async function TodosPage(props: {
           </span>
           {totalCount === 1 ? "Todo encontrado" : "Todos encontrados"}
           {isSearchMode && query && (
-            <span className="text-gray-600 ml-2">para &quot;{query}&quot;</span>
+            <span className="text-black ml-2">para {query}</span>
           )}
         </p>
       </div>
