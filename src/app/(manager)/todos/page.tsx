@@ -6,6 +6,7 @@ import { fetchWrapper } from "@/utils/fetchWrapper";
 import { getToken } from "@/utils/getToken";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { TodosSearchWrapper } from "@/components/todosSearchWrapper";
 
 interface IResponseTodos {
   list: Todo[];
@@ -33,16 +34,44 @@ async function requestTodos(pageSize: number, page: number) {
   };
 }
 
+async function searchTodos(query: string) {
+  const token = await getToken();
+
+  const todos: Todo[] = await fetchWrapper(
+    `todos/search/semantic?query=${encodeURIComponent(query)}`,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return todos;
+}
+
 export default async function TodosPage(props: {
   searchParams?: Promise<{
     page?: string;
+    query?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
   const ITEMS_PER_PAGE: number = 10;
   const page = Number(searchParams?.page) || 1;
+  const query = searchParams?.query;
+
+  let todos: Todo[];
+  let totalCount: number;
+  let isSearchMode = false;
+
   const response = await requestTodos(ITEMS_PER_PAGE, page);
-  const totalCount = response.paging.total;
+  todos = response.todos;
+  totalCount = response.paging.total;
+
+  if (query) {
+    todos = await searchTodos(query);
+    totalCount = todos.length;
+    isSearchMode = true;
+  }
 
   return (
     <main className="p-4">
@@ -61,12 +90,17 @@ export default async function TodosPage(props: {
             {totalCount}
           </span>
           {totalCount === 1 ? "Todo encontrado" : "Todos encontrados"}
+          {isSearchMode && query && (
+            <span className="text-gray-600 ml-2">para &quot;{query}&quot;</span>
+          )}
         </p>
       </div>
 
-      <TodosTable todos={response.todos} />
+      <TodosSearchWrapper />
 
-      {response.paging.total > ITEMS_PER_PAGE && (
+      <TodosTable todos={todos} />
+
+      {!isSearchMode && totalCount > ITEMS_PER_PAGE && (
         <Pagination totalCount={totalCount} />
       )}
     </main>
