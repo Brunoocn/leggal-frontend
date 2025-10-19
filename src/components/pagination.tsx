@@ -34,7 +34,7 @@ export function Pagination({ totalCount }: PaginationProps) {
       <div className="flex items-center gap-6 lg:gap-8">
         <div className="flex items-center justify-center gap-2">
           <Link href={createPageURL(1)}>
-            <Button className="flex h-8 w-8 items-center justify-center p-0 border border-neutral-700 text-black hover:bg-neutral-700 hover:text-neutral-300">
+            <Button className="flex h-8 w-8 items-center justify-center p-0 border border-neutral-700 text-white hover:bg-neutral-700 hover:text-neutral-300">
               <ChevronsLeft className="h-4 w-4" />
               <span className="sr-only">Primeira página</span>
             </Button>
@@ -43,7 +43,7 @@ export function Pagination({ totalCount }: PaginationProps) {
           <Link
             href={createPageURL(currentPage - 1 <= 0 ? 1 : currentPage - 1)}
           >
-            <Button className="flex h-8 w-8 items-center justify-center p-0 border border-neutral-700 text-black hover:bg-neutral-700 hover:text-neutral-300">
+            <Button className="flex h-8 w-8 items-center justify-center p-0 border border-neutral-700 text-white hover:bg-neutral-700 hover:text-neutral-300">
               <ChevronLeft className="h-4 w-4" />
               <span className="sr-only">Próxima página</span>
             </Button>
@@ -54,14 +54,14 @@ export function Pagination({ totalCount }: PaginationProps) {
               currentPage + 1 >= allPages ? allPages : currentPage + 1
             )}
           >
-            <Button className="flex h-8 w-8 items-center justify-center p-0 border border-neutral-700 text-black hover:bg-neutral-700 hover:text-neutral-300">
+            <Button className="flex h-8 w-8 items-center justify-center p-0 border border-neutral-700 text-white hover:bg-neutral-700 hover:text-neutral-300">
               <ChevronRight className="h-4 w-4" />
               <span className="sr-only">Página anterior</span>
             </Button>
           </Link>
 
           <Link href={createPageURL(allPages)}>
-            <Button className="flex h-8 w-8 items-center justify-center p-0 border border-neutral-700 text-black hover:bg-neutral-700 hover:text-neutral-300">
+            <Button className="flex h-8 w-8 items-center justify-center p-0 border border-neutral-700 text-white hover:bg-neutral-700 hover:text-neutral-300">
               <ChevronsRight className="h-4 w-4" />
               <span className="sr-only">Última página</span>
             </Button>

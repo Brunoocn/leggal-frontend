@@ -22,6 +22,10 @@ export async function fetchWrapper<T = unknown>(
     }
   );
 
+  if (res.status === 204) {
+    return null as T;
+  }
+
   const contentLength = res.headers.get('Content-Length');
   const result =
     contentLength === '0' ? null : await res[init?.responseType || 'json']();
