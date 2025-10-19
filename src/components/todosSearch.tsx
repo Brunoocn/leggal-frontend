@@ -15,10 +15,9 @@ export function TodosSearch({ onSearch }: TodosSearchProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onSearch(query.trim());
-    }, 500); // 500ms de debounce
+    }, 500);
 
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
   return (
