@@ -1,12 +1,10 @@
 import { Pagination } from "@/components/pagination";
 import { TodosTable } from "@/components/todosTable";
-import { Button } from "@/components/ui/button";
 import { Todo } from "@/types/Todo";
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { getToken } from "@/utils/getToken";
-import { Plus } from "lucide-react";
-import Link from "next/link";
 import { TodosSearchWrapper } from "@/components/todosSearchWrapper";
+import { CreateTodoDialog } from "@/components/createTodoDialog";
 
 interface IResponseTodos {
   list: Todo[];
@@ -48,6 +46,28 @@ async function searchTodos(query: string) {
   return todos;
 }
 
+async function loadTodos({
+  query,
+  page,
+  pageSize,
+}: {
+  query?: string;
+  page: number;
+  pageSize: number;
+}) {
+  if (query) {
+    const todos = await searchTodos(query);
+    return { todos, totalCount: todos.length, isSearch: true };
+  }
+
+  const response = await requestTodos(pageSize, page);
+  return {
+    todos: response.todos,
+    totalCount: response.paging.total,
+    isSearch: false,
+  };
+}
+
 export default async function TodosPage(props: {
   searchParams?: Promise<{
     page?: string;
@@ -59,38 +79,25 @@ export default async function TodosPage(props: {
   const page = Number(searchParams?.page) || 1;
   const query = searchParams?.query;
 
-  const isSearchMode = !!query;
-
-  let todos: Todo[];
-  let totalCount: number;
-
-  if (isSearchMode) {
-    todos = await searchTodos(query);
-    totalCount = todos.length;
-  } else {
-    const response = await requestTodos(ITEMS_PER_PAGE, page);
-    todos = response.todos;
-    totalCount = response.paging.total;
-  }
+  const { todos, totalCount, isSearch } = await loadTodos({
+    query,
+    page,
+    pageSize: ITEMS_PER_PAGE,
+  });
 
   return (
     <main className="p-4">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-2xl font-bold text-black">Todos</h1>
-          <Link href="/todos/create">
-            <Button className="flex items-center gap-2 h-9 px-4 text-sm">
-              <Plus className="h-4 w-4" />
-              Criar Todo
-            </Button>
-          </Link>
+          <CreateTodoDialog />
         </div>
         <p className="text-black">
           <span className="text-black font-semibold mr-[5px]">
             {totalCount}
           </span>
           {totalCount === 1 ? "Todo encontrado" : "Todos encontrados"}
-          {isSearchMode && query && (
+          {isSearch && query && (
             <span className="text-black ml-2">para {query}</span>
           )}
         </p>
@@ -100,7 +107,7 @@ export default async function TodosPage(props: {
 
       <TodosTable todos={todos} />
 
-      {!isSearchMode && totalCount > ITEMS_PER_PAGE && (
+      {!isSearch && totalCount > ITEMS_PER_PAGE && (
         <Pagination totalCount={totalCount} />
       )}
     </main>
