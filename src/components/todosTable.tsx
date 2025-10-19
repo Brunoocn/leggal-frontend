@@ -14,6 +14,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { getCookie } from "cookies-next/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { UpdateTodoDialog } from "@/components/updateTodoDialog";
 
 interface TodosTableProps {
   todos: Todo[];
@@ -111,13 +112,17 @@ export function TodosTable({ todos }: TodosTableProps) {
             <TableCell>{formatDate(todo.updatedAt)}</TableCell>
             <TableCell>
               <div className="flex items-center justify-center gap-2">
-                <button
-                  onClick={() => {}}
-                  className="text-blue-600 hover:text-blue-800 transition-colors"
-                  title="Editar"
-                >
-                  <Pencil size={18} />
-                </button>
+                <UpdateTodoDialog
+                  todoId={todo.id}
+                  trigger={
+                    <button
+                      className="text-blue-600 hover:text-blue-800 transition-colors"
+                      title="Editar"
+                    >
+                      <Pencil size={18} />
+                    </button>
+                  }
+                />
 
                 <button
                   onClick={() => onDelete(todo.id)}
