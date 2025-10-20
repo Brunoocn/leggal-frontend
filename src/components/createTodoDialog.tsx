@@ -97,19 +97,20 @@ export function CreateTodoDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="flex items-center gap-2 h-9 px-4 text-sm">
-          <Plus className="h-4 w-4" />
-          Criar Todo
+        <Button className="flex items-center gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
+          <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+          <span className="hidden xs:inline">Criar Todo</span>
+          <span className="xs:hidden">Criar</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-[525px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Criar Novo Todo</DialogTitle>
+          <DialogTitle className="text-base sm:text-lg">Criar Novo Todo</DialogTitle>
         </DialogHeader>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="manual">Manual</TabsTrigger>
-            <TabsTrigger value="ia">IA</TabsTrigger>
+            <TabsTrigger value="manual" className="text-xs sm:text-sm">Manual</TabsTrigger>
+            <TabsTrigger value="ia" className="text-xs sm:text-sm">IA</TabsTrigger>
           </TabsList>
 
           <TabsContent value="manual" className="space-y-4 mt-4">

@@ -15,7 +15,7 @@ export default function ManagerLayout({
   return (
     <>
       <PageHeader />
-      <main className="mx-[100px] mt-[24px]">{children}</main>
+      <main className="mx-0 sm:mx-4 md:mx-8 lg:mx-16 xl:mx-[100px] mt-[24px]">{children}</main>
     </>
   );
 }

@@ -30,30 +30,31 @@ export default function PageHeader() {
   }, []);
 
   return (
-    <header className="flex h-[80px] items-center justify-between bg-white px-[100px] py-[20px]">
-      <div>
+    <header className="flex h-[70px] sm:h-[80px] items-center justify-between bg-white px-3 sm:px-8 md:px-16 lg:px-[100px] py-3 sm:py-[20px]">
+      <div className="flex-shrink-0">
         <Image
           src="/assets/logo_leggal.svg"
           alt="logo"
-          width={50}
-          height={20}
+          width={40}
+          height={16}
           priority
+          className="sm:w-[50px] sm:h-[20px]"
         />
       </div>
-  
+
       <div className="flex flex-row">
-        <div className="flex flex-row divide-x-[1px]">
-          <div className="flex flex-row items-center px-[24px]">
-            <span className="mr-[10px] flex text-black">
-              Olá,{" "}
-              <span className="font-semibold ml-[5px]"> {user?.name}!</span>
+        <div className="flex flex-row">
+          <div className="flex flex-row items-center px-0 sm:px-4 md:px-[24px]">
+            <span className="mr-2 sm:mr-[10px] flex text-black text-xs sm:text-sm md:text-base">
+              <span className="hidden sm:inline">Olá,{" "}</span>
+              <span className="font-semibold ml-0 sm:ml-[5px] truncate max-w-[120px] sm:max-w-none">{user?.name}!</span>
             </span>
             <button
               onClick={handleLogout}
-              className="ml-[10px] text-gray-600 hover:text-red-600 transition-colors"
+              className="ml-2 sm:ml-[10px] text-gray-600 hover:text-red-600 transition-colors flex-shrink-0"
               title="Sair"
             >
-              <LogOut size={20} />
+              <LogOut size={18} className="sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>

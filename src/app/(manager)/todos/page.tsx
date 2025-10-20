@@ -86,13 +86,13 @@ export default async function TodosPage(props: {
   });
 
   return (
-    <main className="p-4">
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-2xl font-bold text-black">Todos</h1>
+    <main className="p-3 sm:p-6 md:p-8 w-full">
+      <div className="mb-4 sm:mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 mb-2">
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black">Todos</h1>
           <CreateTodoDialog />
         </div>
-        <p className="text-black">
+        <p className="text-xs sm:text-sm md:text-base text-black">
           <span className="text-black font-semibold mr-[5px]">
             {totalCount}
           </span>
