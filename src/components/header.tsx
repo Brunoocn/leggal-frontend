@@ -35,10 +35,9 @@ export default function PageHeader() {
         <Image
           src="/assets/logo_leggal.svg"
           alt="logo"
-          width={40}
-          height={16}
+          width={50}
+          height={20}
           priority
-          className="sm:w-[50px] sm:h-[20px]"
         />
       </div>
 
