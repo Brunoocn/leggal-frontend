@@ -37,14 +37,14 @@ export default function ConfirmDialog({
         <DialogFooter>
           <Button
             type="button"
-            className="w-full bg-white text-orange-500 hover:border-gray-100 hover:bg-gray-100"
+            className="w-full bg-white text-green-400 hover:border-gray-100 hover:bg-gray-100"
             onClick={handleDialog}
           >
             {messageCancel || 'Cancelar'}
           </Button>
           <Button
             type="button"
-            className="mr-[3px] w-full bg-orange-500 text-white hover:border hover:border-gray-10 hover:bg-orange-600"
+            className="mr-[3px] w-full bg-green-400 text-white hover:border hover:border-gray-10 hover:bg-green-500"
             onClick={functionConfirm}
           >
             {messageConfirm || "Salvar"}

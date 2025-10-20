@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { UpdateTodoDialog } from "@/components/updateTodoDialog";
 import { useState } from "react";
 import { formatDate } from "@/utils/formatDate";
+import ConfirmDialog from "@/components/confirmDialog";
 
 interface TodosTableProps {
   todos: Todo[];
@@ -26,13 +27,29 @@ export function TodosTable({ todos }: TodosTableProps) {
   const { toast } = useToast();
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [todoToDelete, setTodoToDelete] = useState<string | null>(null);
 
-  async function onDelete(id: string) {
-    setDeletingId(id);
+  function handleOpenConfirmDialog(id: string) {
+    setTodoToDelete(id);
+    setShowConfirmDialog(true);
+  }
+
+  function handleCloseConfirmDialog() {
+    setShowConfirmDialog(false);
+    setTodoToDelete(null);
+  }
+
+  async function onConfirmDelete() {
+    if (!todoToDelete) return;
+
+    setShowConfirmDialog(false);
+    setDeletingId(todoToDelete);
+
     try {
       const token = getCookie("LEGGAL::TOKEN");
 
-      await fetchWrapper(`todos/${id}`, {
+      await fetchWrapper(`todos/${todoToDelete}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -53,6 +70,7 @@ export function TodosTable({ todos }: TodosTableProps) {
       });
     } finally {
       setDeletingId(null);
+      setTodoToDelete(null);
     }
   }
 
@@ -119,7 +137,7 @@ export function TodosTable({ todos }: TodosTableProps) {
                     />
 
                     <button
-                      onClick={() => onDelete(todo.id)}
+                      onClick={() => handleOpenConfirmDialog(todo.id)}
                       disabled={deletingId === todo.id}
                       className="text-red-600 hover:text-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       title="Deletar"
@@ -141,6 +159,16 @@ export function TodosTable({ todos }: TodosTableProps) {
           <p className="text-gray-500">Nenhum todo encontrado.</p>
         </div>
       )}
+
+      <ConfirmDialog
+        showDialog={showConfirmDialog}
+        handleDialog={handleCloseConfirmDialog}
+        functionConfirm={onConfirmDelete}
+        title="Confirmar exclusão"
+        message="Tem certeza que deseja deletar este todo? Esta ação não pode ser desfeita."
+        messageCancel="Cancelar"
+        messageConfirm="Deletar"
+      />
     </>
   );
 }
